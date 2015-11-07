@@ -25,9 +25,6 @@ desviaciones = []
 mejoresCromosomas = []
 
 
-
-
-
 # Genera dos poblaciones, evitando el par (1, 1)
 def generarPoblacion(pX, pY):
 	i = 0
@@ -96,6 +93,16 @@ def evaluar(x, y):
 		sobranteTotal = B * Sa + (A - Sa) * Sb
 
 	return sobranteTotal
+
+
+# Cantidad de retazos útiles
+def utiles(x, y):
+	if x > y:
+	 	return (B/x) * (A/y) + ((B%x)/y) * (A/x)
+	elif y > x:
+	 	return (B/x) * (A/y) + (B/y) * ((A%y)/x)
+	else:
+	 	return (B/x) * (A/y)
 
 
 # Devuelve en un arreglo la conversión a binario
@@ -361,7 +368,7 @@ def main():
 		cruzamiento[:] = []
 		mutacion[:] = []
 
-		raw_input('Presione <ENTER> para continuar')
+		# raw_input('Presione <ENTER> para continuar')
 
 
 	raw_input('Presione <ENTER> para ver resultados')
@@ -372,18 +379,30 @@ def main():
 			menorDS = i;
 
 	print 'La mejor población es la población: ', menorDS
-	print 'El mejor cromosoma de la mejor generación es: ', mejoresCromosomas[menorDS]
 
-	print 'Parte X: ', mejoresCromosomas[menorDS][longC_Y:]
-	print 'Valor X: ', toDecimal(mejoresCromosomas[menorDS][longC_Y:])
+	mejorCromosoma = mejoresCromosomas[menorDS]
+	print 'El mejor cromosoma de la mejor generación es: '
+	imprimirCromosoma(mejorCromosoma)
 
-	print 'Parte Y: ', mejoresCromosomas[menorDS][:longC_Y]
-	print 'Valor Y: ', toDecimal(mejoresCromosomas[menorDS][:longC_Y])
-	
+	print 'Parte X: ', mejorCromosoma[longC_Y:]
+	xOptimo = toDecimal(mejorCromosoma[longC_Y:])
+	print 'Valor X: ', xOptimo
+
+	print 'Parte Y: ', mejorCromosoma[:longC_Y]
+	yOptimo = toDecimal(mejorCromosoma[:longC_Y])
+	print 'Valor Y: ', yOptimo
+
+	print 'Retazos útiles: ', utiles(xOptimo, yOptimo)
+	print 'Área sobrante: ', evaluar(xOptimo, yOptimo)
+
 
 # Sección de test
 def test():
-	intervalo = Intervalo(0.2,0.6)
-	print intervalo.pertenece(0.1)
+	global A
+	global B
+	A = 10
+	B = 7
+	print utiles(4, 3)
+	print "funca" if utiles(4, 3) == 5 else "dada"
 
 main()
